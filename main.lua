@@ -1,5 +1,8 @@
 function love.load()
-    --our player table / properties
+--our player tables / properties
+    camera = require 'libaries/camera'
+    camera = camera()
+
     anim8 = require 'libraries/anim8'
     love.graphics.setDefaultFilter("nearest", "nearest")
 
@@ -54,10 +57,27 @@ function love.update(dt) --delta time run / feel the same no matter the frame ra
     end
 
     player.anim:update(dt)
+
+    cam:LookAt(player.x, player.y)
+
+    local w = love.graphics.getWidth()
+    local h = love.graphics.getHeight(
+
+    if cam.x < w/2 then
+        cam.x = w/2
+    end
+
+    if cam.y < w/2 then
+        cam.y = w/2
+    end
+
 end
 
 function love.draw()
     --draws
-    love.graphics.draw(background, 0,0)
-    player.anim:draw(player.spriteSheet, player.x, player.y, nil, 10)
+    cam:attach()
+        gameMap:drawLayer(gameMap.Layers["Ground"])
+        gameMap:drawLayer(gameMap.Layers["Trees"])
+        layer.anim:draw(player.spriteSheet, player.x, player.y, nil, 6, nil, 6, 9)
+    cam:detach()
 end
